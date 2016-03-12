@@ -57,9 +57,6 @@ def init_table():
                  date date not null,
                  exception_type boolean not null
                  );''')
-    conn.execute('''CREATE TABLE download_date
-                 (download_date date
-                 );''')
     conn.close()
 
 
