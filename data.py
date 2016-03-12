@@ -22,8 +22,7 @@ def download_gtfs_zip():
     # Inserting date updated in db
     conn = sqlite3.connect('stm.db')
     c = conn.cursor()
-    c.execute("DELETE FROM download_date;")
-    c.execute("INSERT INTO download_date values (DATE('now'))")
+    c.execute("UPDATE download_date SET download_date=DATE('now')")
     conn.commit()
     conn.close()
 
