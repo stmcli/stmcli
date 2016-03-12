@@ -53,5 +53,3 @@ def init_table():
                  (download_date date
                  );''')
     conn.close()
-
-init_table()
