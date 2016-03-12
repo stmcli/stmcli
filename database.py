@@ -113,5 +113,10 @@ def load_stm_data():
         load_data(filename)
 
 
-create_db()
-load_stm_data()
+if __name__ == '__main__':
+    try:
+        os.unlink('stm.db')
+        create_db()
+        load_stm_data()
+    except KeyboardInterrupt:
+        exit(0)
