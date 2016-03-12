@@ -52,6 +52,11 @@ def init_table():
                  stop_id int not null,
                  stop_sequence int not null
                  );''')
+    conn.execute('''CREATE TABLE calendar_dates
+                 (service_id char(3) not null,
+                 date date not null,
+                 exception_type boolean not null
+                 );''')
     conn.execute('''CREATE TABLE download_date
                  (download_date date
                  );''')
@@ -87,6 +92,10 @@ def load_data(data_file):
         print("stop_times")
         cursor.executemany('''INSERT INTO stop_times
                            VALUES (?, ?, ?, ?, ?);''', data)
+    elif "calendar_dates" in data_file:
+        print("calendar_dates")
+        cursor.executemany('''INSERT INTO calendar_dates
+                           VALUES (?, ?, ?);''', data)
     else:
         print("There is no table for " + data_file)
     conn.commit()
