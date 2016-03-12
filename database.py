@@ -16,7 +16,7 @@ def init_table():
                  agency_fare_url char(255)
                  );''')
     conn.execute('''CREATE TABLE stops
-                 (stop_id int not null,
+                 (stop_id int primary key not null,
                  stop_code int,
                  stop_name char(50) not null,
                  stop_lat int not null,
@@ -25,7 +25,7 @@ def init_table():
                  wheelchair_accessible boolean
                  );''')
     conn.execute('''CREATE TABLE routes
-                 (route_id int not null,
+                 (route_id int primary key not null,
                  agency_id int,
                  route_short_name char(10) not null,
                  route_long_name char(40) not null,
@@ -37,7 +37,7 @@ def init_table():
     conn.execute('''CREATE TABLE trips
                  (route_id int not null,
                  service_id int not null,
-                 trip_id char(20) not null,
+                 trip_id char(20) primary key not null,
                  trip_headsign char(50),
                  direction_id boolean,
                  wheelchair_accessible int,
@@ -90,6 +90,7 @@ def load_data(data_file):
     else:
         print("There is no table for " + data_file)
     conn.commit()
+    conn.close()
 
 
 def create_db():
