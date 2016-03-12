@@ -88,16 +88,23 @@ def load_data(data_file):
         cursor.executemany('''INSERT INTO stop_times
                            VALUES (?, ?, ?, ?, ?);''', data)
     else:
-        print("There is not table for " + data_file)
+        print("There is no table for " + data_file)
     conn.commit()
 
 
-def main():
-    init_table()
+def create_db():
+    if not os.path.isfile('stm.db'):
+        init_table()
+        print("Database Created")
+    else:
+        print("Database already exist")
 
+
+def load_stm_data():
     stm_file_dir = os.listdir('stm')
     for filename in stm_file_dir:
         load_data(filename)
 
 
-main()
+create_db()
+load_stm_data()
