@@ -3,12 +3,12 @@
 import argparse
 import data
 import database
-import printinfo
 import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-b", "--bus-number", help="the # of the bus")
 parser.add_argument("-s", "--bus-stop-code", help="the code of the bus stop")
+args = parser.parse_args()
 
 db_file = "stm.db"
 
@@ -37,5 +37,15 @@ def main():
         else:
             print("Data update needed for stmcli to work.")
             exit(0)
+
+    if args.bus_number and args.bus_stop_code:
+        print("TODO")
+        # print_next_departures(args.bus_number, args.bus_stop_code)
+    elif args.bus_number:
+        print("TODO")
+        # print_all_bus_stop(args.bus_number)
+    elif args.bus_stop_code:
+        print("TODO")
+        # print_all_bus_for_stop_code(args.bus_stop_code)
 
 main()
