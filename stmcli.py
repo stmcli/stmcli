@@ -4,6 +4,7 @@ import argparse
 import data
 import database
 import os
+import printinfo
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-b", "--bus-number", help="the # of the bus")
@@ -39,13 +40,18 @@ def main():
             exit(0)
 
     if args.bus_number and args.bus_stop_code:
-        print("TODO")
-        # print_next_departures(args.bus_number, args.bus_stop_code)
+        # Print the 10 next departures
+        next_departures = printinfo.next_departures(args.bus_number,
+                                                    args.bus_stop_code,
+                                                    db_file)
+        for i in next_departures:
+            print(i[0])
+
     elif args.bus_number:
         print("TODO")
-        # print_all_bus_stop(args.bus_number)
+        # printinfo.all_bus_stop(args.bus_number, db_file)
     elif args.bus_stop_code:
         print("TODO")
-        # print_all_bus_for_stop_code(args.bus_stop_code)
+        # printinfo.all_bus_for_stop_code(args.bus_stop_code, db_file)
 
 main()
