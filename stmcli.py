@@ -45,13 +45,20 @@ def main():
                                                     args.bus_stop_code,
                                                     db_file)
         for i in next_departures:
-            print(i[0])
+            print(i)
 
     elif args.bus_number:
-        print("TODO")
-        # printinfo.all_bus_stop(args.bus_number, db_file)
+        # Print all bus stops for a bus
+        bus_stops = printinfo.all_bus_stop(args.bus_number, db_file)
+
+        for i in bus_stops:
+            print(i)
+
     elif args.bus_stop_code:
-        print("TODO")
-        # printinfo.all_bus_for_stop_code(args.bus_stop_code, db_file)
+        # Print all bus for a stop code
+        bus = printinfo.all_bus_for_stop_code(args.bus_stop_code, db_file)
+
+        for i in bus:
+            print(i)
 
 main()
