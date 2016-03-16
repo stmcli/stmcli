@@ -24,7 +24,7 @@ def next_departures(bus_number, stop_code, db_file):
                  ORDER BY st.departure_time""", sql_var)
 
     result = []
-    for i in c.fetchall:
+    for i in c.fetchall():
         result.append(i[0])
     conn.close()
     return result
