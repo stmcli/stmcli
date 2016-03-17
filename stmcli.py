@@ -5,10 +5,14 @@ import data
 import database
 import os
 import printinfo
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-b", "--bus-number", help="the # of the bus")
 parser.add_argument("-s", "--bus-stop-code", help="the code of the bus stop")
+parser.add_argument("-n", "--number-departure",
+                    help="the code of the bus stop. "
+                         "Only works with both -b and -s specified")
 args = parser.parse_args()
 
 db_file = "stm.db"
@@ -44,8 +48,23 @@ def main():
         next_departures = printinfo.next_departures(args.bus_number,
                                                     args.bus_stop_code,
                                                     db_file)
+
+        curr_time = time.strftime('%H:%M:%S').split(':')
+        departures_listed = 0
+
+        if not args.number_departure:
+            max_departure = 10
+        else:
+            max_departure = int(args.number_departure)
+
         for i in next_departures:
-            print(i)
+            dep_time = i.split(':')
+            if (dep_time[0] >= curr_time[0] and dep_time[1] >= curr_time[1]):
+                print(i)
+                departures_listed += 1
+
+            if departures_listed is max_departure:
+                break
 
     elif args.bus_number:
         # Print all bus stops for a bus
