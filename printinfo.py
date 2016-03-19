@@ -5,7 +5,7 @@ import time
 from peewee import *
 
 
-def next_departures(bus_number, stop_code, date, db_file):
+def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
     # Getting the 10 next departures
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
@@ -23,11 +23,21 @@ def next_departures(bus_number, stop_code, date, db_file):
                      WHERE date=?)
                  ORDER BY st.departure_time""", sql_var)
 
-    result = []
+    query_result = []
     for i in c.fetchall():
-        result.append(i[0])
+        query_result.append(i[0])
     conn.close()
-    return result
+
+    result = []
+    departures_listed = 0
+    for i in query_result:
+        dep_time = i.split(':')
+        if dep_time[0] >= time[0] and dep_time[1] >= time[1]:
+            result.append("{0}:{1}".format(dep_time[0], dep_time[1]))
+            departures_listed += 1
+
+        if departures_listed is nb_departure:
+            return result
 
 
 def all_bus_stop(bus_number, db_file):

@@ -24,9 +24,7 @@ args = parser.parse_args()
 db_file = "stm.db"
 
 
-def main():
-
-    # First time run test
+def first_time_check():
     if not os.path.isfile(db_file):
         answer = input("No data found, update? [y/n] ")
         if answer == "y":
@@ -37,7 +35,8 @@ def main():
             print("Can't continue without data.")
             exit(0)
 
-    # Checking for update
+
+def check_for_update():
     if data.check_for_update():
         answer = input("Data update needed, update now? [y/n] ")
         if answer == "y":
@@ -49,49 +48,63 @@ def main():
             print("Data update needed for stmcli to work.")
             exit(0)
 
+
+def set_date():
+    if not args.date:
+        return time.strftime('%Y%m%d')
+    else:
+        if len(str(args.date)) != 8:
+            print("date format is aaaammjj. Ex: 20160218")
+            exit(1)
+        else:
+            return args.date
+
+
+def set_time():
+    if not args.time:
+        return time.strftime('%H:%M').split(':')
+    else:
+        custom_time = args.time.split(':')
+        if len(time) != 2:
+            print("time format is HH:MM. Ex: 06:23")
+            exit(1)
+        elif len(str(time[0])) != 2 or len(str(time[1])) != 2:
+            print("time format is HH:MM. Ex: 06:23")
+            exit(1)
+
+        return custom_time
+
+
+def set_number_departure():
+    if not args.number_departure:
+        return 10
+    else:
+        return int(args.number_departure)
+
+
+def main():
+
+    # Checking for updates
+    first_time_check()
+    check_for_update()
+
     # Print the next departures
     if args.bus_number and args.bus_stop_code:
 
-        # -d and -t argument check
-        if not args.date:
-            curr_date = time.strftime('%Y%m%d')
-        else:
-            if len(str(args.date)) != 8:
-                print("date format is aaaammjj. Ex: 20160218")
-                exit(1)
-            else:
-                curr_date = args.date
-
-        if not args.time:
-            curr_time = time.strftime('%H:%M').split(':')
-        else:
-            curr_time = args.time.split(':')
-            if len(curr_time) != 2:
-                print("time format is HH:MM. Ex: 06:23")
-                exit(1)
-            elif len(str(curr_time[0])) != 2 or len(str(curr_time[1])) != 2:
-                print("time format is HH:MM. Ex: 06:23")
-                exit(1)
+        # getting date and time
+        date = set_date()
+        time = set_time()
+        number_departure = set_number_departure()
 
         next_departures = printinfo.next_departures(args.bus_number,
                                                     args.bus_stop_code,
-                                                    curr_date,
+                                                    date,
+                                                    time,
+                                                    number_departure,
                                                     db_file)
 
-        if not args.number_departure:
-            max_departure = 10
-        else:
-            max_departure = int(args.number_departure)
-
-        departures_listed = 0
         for i in next_departures:
-            dep_time = i.split(':')
-            if dep_time[0] >= curr_time[0] and dep_time[1] >= curr_time[1]:
-                print(i)
-                departures_listed += 1
-
-            if departures_listed is max_departure:
-                break
+            print(i)
 
     elif args.bus_number:
         # Print all bus stops for a bus
