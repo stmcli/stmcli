@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-b", "--bus-number", help="the # of the bus")
 parser.add_argument("-s", "--bus-stop-code", help="the code of the bus stop")
 parser.add_argument("-n", "--number-departure",
-                    help="the code of the bus stop. "
+                    help="The number of departures to print. "
                          "Only works with both -b and -s specified")
 parser.add_argument("-d", "--date",
                     help="specify the date to use when getting"
@@ -49,21 +49,34 @@ def main():
             print("Data update needed for stmcli to work.")
             exit(0)
 
+    # Print the next departures
     if args.bus_number and args.bus_stop_code:
-        # Print the 10 next departures
+
+        # -d and -t argument check
         if not args.date:
             curr_date = time.strftime('%Y%m%d')
         else:
-            curr_date = args.date
+            if len(str(args.date)) != 8:
+                print("date format is aaaammjj. Ex: 20160218")
+                exit(1)
+            else:
+                curr_date = args.date
+
+        if not args.time:
+            curr_time = time.strftime('%H:%M').split(':')
+        else:
+            curr_time = args.time.split(':')
+            if len(curr_time) != 2:
+                print("time format is HH:MM. Ex: 06:23")
+                exit(1)
+            elif len(str(curr_time[0])) != 2 or len(str(curr_time[1])) != 2:
+                print("time format is HH:MM. Ex: 06:23")
+                exit(1)
 
         next_departures = printinfo.next_departures(args.bus_number,
                                                     args.bus_stop_code,
                                                     curr_date,
                                                     db_file)
-        if not args.time:
-            curr_time = time.strftime('%H:%M').split(':')
-        else:
-            curr_time = args.time.split(':')
 
         if not args.number_departure:
             max_departure = 10
