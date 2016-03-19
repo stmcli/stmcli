@@ -24,31 +24,6 @@ args = parser.parse_args()
 db_file = "stm.db"
 
 
-def first_time_check():
-    if not os.path.isfile(db_file):
-        answer = input("No data found, update? [y/n] ")
-        if answer == "y":
-            data.download_gtfs_data()
-            database.create_db()
-            database.load_stm_data()
-        else:
-            print("Can't continue without data.")
-            exit(0)
-
-
-def check_for_update():
-    if data.check_for_update():
-        answer = input("Data update needed, update now? [y/n] ")
-        if answer == "y":
-            os.unlink(db_file)
-            data.download_gtfs_data()
-            database.create_db()
-            database.load_stm_data()
-        else:
-            print("Data update needed for stmcli to work.")
-            exit(0)
-
-
 def set_date():
     if not args.date:
         return time.strftime('%Y%m%d')
@@ -89,8 +64,7 @@ def set_number_departure():
 def main():
 
     # Checking for updates
-    first_time_check()
-    check_for_update()
+    data.check_for_update(db_file)
 
     # Print the next departures
     if args.bus_number and args.bus_stop_code:

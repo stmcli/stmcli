@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import data
+import database
 import os
 import sqlite3
 import time
@@ -31,19 +33,37 @@ def download_gtfs_data():
     os.unlink("gtfs.zip")
 
 
-def check_for_update():  # Return True if update is needed, False if not
+def check_for_update(db_file):
+    # Check if db_file exist
+    if not os.path.isfile(db_file):
+        answer = input("No data found, update? [y/n] ")
+        if answer == "y":
+            data.download_gtfs_data()
+            database.create_db()
+            database.load_stm_data()
+        else:
+            print("Can't continue without data.")
+            exit(0)
+
+    # Check if GTFS data update is needed
     curr_date = time.strftime('%Y%m%d')
 
-    conn = sqlite3.connect('stm.db')
+    conn = sqlite3.connect(db_file)
     c = conn.cursor()
     c.execute('SELECT * FROM calendar_dates WHERE date={0}'.format(curr_date))
     t = c.fetchone()
     conn.close()
 
-    if t is None:
-        return True
-    else:
-        return False
+    if t is None or not os.path.isfile(db_file):
+        answer = input("Data update needed, update now? [y/n] ")
+        if answer == "y":
+            os.unlink(db_file)
+            data.download_gtfs_data()
+            database.create_db()
+            database.load_stm_data()
+        else:
+            print("Data update needed for stmcli to work.")
+            exit(0)
 
 
 def date_in_scope(date):
