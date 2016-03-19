@@ -46,7 +46,7 @@ def all_bus_stop(bus_number, db_file):
     c = conn.cursor()
     sql_var = (bus_number, time.strftime('%Y%m%d'))
 
-    c.execute("""SELECT stop_name, stop_code
+    c.execute("""SELECT stop_name, stop_code, trip_headsign
                  FROM trips t
                  INNER JOIN stop_times st
                      ON t.trip_id=st.trip_id
@@ -60,12 +60,15 @@ def all_bus_stop(bus_number, db_file):
                  GROUP BY stop_code
                  ORDER BY stop_sequence
                  """, sql_var)
+    query_result = c.fetchall()
+    result = ["---------"]
+    result.append("Direction {0}".format(query_result[0][2]))
+    result.append("----------")
 
-    result = ["Direction {0}".format("ADD DIRECTION 1 HERE")]
-    for i in c.fetchall():
+    for i in query_result:
         result.append("[{0}] {1}".format(i[0], i[1]))
 
-    c.execute("""SELECT stop_name, stop_code
+    c.execute("""SELECT stop_name, stop_code, trip_headsign
                  FROM trips t
                  INNER JOIN stop_times st
                      ON t.trip_id=st.trip_id
@@ -79,9 +82,12 @@ def all_bus_stop(bus_number, db_file):
                  GROUP BY stop_code
                  ORDER BY stop_sequence
                  """, sql_var)
+    query_result = c.fetchall()
+    result.append("----------")
+    result.append("Direction {0}".format(query_result[0][2]))
+    result.append("----------")
 
-    result.append("Direction {0}".format("ADD DIRECTION 2 HERE"))
-    for i in c.fetchall():
+    for i in query_result:
         result.append("[{0}] {1}".format(i[0], i[1]))
 
     conn.close()
