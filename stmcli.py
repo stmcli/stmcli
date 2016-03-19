@@ -44,10 +44,10 @@ def set_time():
         return time.strftime('%H:%M').split(':')
     else:
         custom_time = args.time.split(':')
-        if len(time) != 2:
+        if len(custom_time) != 2:
             print("time format is HH:MM. Ex: 06:23")
             exit(1)
-        elif len(str(time[0])) != 2 or len(str(time[1])) != 2:
+        elif len(str(custom_time[0])) != 2 or len(str(custom_time[1])) != 2:
             print("time format is HH:MM. Ex: 06:23")
             exit(1)
 
