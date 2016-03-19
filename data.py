@@ -34,7 +34,6 @@ def download_gtfs_data():
 def check_for_update():  # Return True if update is needed, False if not
     curr_date = time.strftime('%Y%m%d')
 
-    # Getting last update date in stm.db
     conn = sqlite3.connect('stm.db')
     c = conn.cursor()
     c.execute('SELECT * FROM calendar_dates WHERE date={0}'.format(curr_date))
@@ -45,3 +44,17 @@ def check_for_update():  # Return True if update is needed, False if not
         return True
     else:
         return False
+
+
+def date_in_scope(date):
+
+    conn = sqlite3.connect('stm.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM calendar_dates WHERE date={0}'.format(date))
+    t = c.fetchone()
+    conn.close()
+
+    if t is None:
+        return False
+    else:
+        return True

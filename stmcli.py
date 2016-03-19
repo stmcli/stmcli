@@ -57,7 +57,11 @@ def set_date():
             print("date format is aaaammjj. Ex: 20160218")
             exit(1)
         else:
-            return args.date
+            if not data.date_in_scope(args.date):
+                print("We don't have any info for this date.")
+                exit(1)
+            else:
+                return args.date
 
 
 def set_time():
