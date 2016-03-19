@@ -5,11 +5,11 @@ import time
 from peewee import *
 
 
-def next_departures(bus_number, stop_code, db_file):
+def next_departures(bus_number, stop_code, date, db_file):
     # Getting the 10 next departures
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
-    sql_var = (bus_number, stop_code, time.strftime('%Y%m%d'))
+    sql_var = (bus_number, stop_code, date)
     c.execute("""SELECT st.departure_time
                  FROM trips t
                  INNER JOIN stop_times st

@@ -13,6 +13,12 @@ parser.add_argument("-s", "--bus-stop-code", help="the code of the bus stop")
 parser.add_argument("-n", "--number-departure",
                     help="the code of the bus stop. "
                          "Only works with both -b and -s specified")
+parser.add_argument("-d", "--date",
+                    help="specify the date to use when getting"
+                         " Departure times. Format: aaaammjj")
+parser.add_argument("-t", "--time",
+                    help="specify the time to use when getting"
+                    " Departure times. Format: HH:MM")
 args = parser.parse_args()
 
 db_file = "stm.db"
@@ -45,21 +51,29 @@ def main():
 
     if args.bus_number and args.bus_stop_code:
         # Print the 10 next departures
+        if not args.date:
+            curr_date = time.strftime('%Y%m%d')
+        else:
+            curr_date = args.date
+
         next_departures = printinfo.next_departures(args.bus_number,
                                                     args.bus_stop_code,
+                                                    curr_date,
                                                     db_file)
-
-        curr_time = time.strftime('%H:%M:%S').split(':')
-        departures_listed = 0
+        if not args.time:
+            curr_time = time.strftime('%H:%M').split(':')
+        else:
+            curr_time = args.time.split(':')
 
         if not args.number_departure:
             max_departure = 10
         else:
             max_departure = int(args.number_departure)
 
+        departures_listed = 0
         for i in next_departures:
             dep_time = i.split(':')
-            if (dep_time[0] >= curr_time[0] and dep_time[1] >= curr_time[1]):
+            if dep_time[0] >= curr_time[0] and dep_time[1] >= curr_time[1]:
                 print(i)
                 departures_listed += 1
 
