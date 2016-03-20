@@ -4,8 +4,8 @@ import sqlite3
 import unicodecsv
 
 
-def init_table():
-    conn = sqlite3.connect('stm.db')
+def init_table(db_file):
+    conn = sqlite3.connect(db_file)
     conn.execute('''CREATE TABLE agency
                  (agency_id char(3),
                  agency_name char(40) not null,
@@ -60,11 +60,11 @@ def init_table():
     conn.close()
 
 
-def load_data(data_file):
-    conn = sqlite3.connect('stm.db')
+def load_data(data_file, db_file, stmcli_data_dir):
+    conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
 
-    file_path = 'stm/' + data_file
+    file_path = "{0}/stm/".format(stmcli_data_dir) + data_file
     with open(file_path, 'rb') as input_file:
         reader = unicodecsv.reader(input_file, delimiter=",")
         data = [row for row in reader]
@@ -99,15 +99,15 @@ def load_data(data_file):
     conn.close()
 
 
-def create_db():
-    if not os.path.isfile('stm.db'):
-        init_table()
+def create_db(db_file):
+    if not os.path.isfile(db_file):
+        init_table(db_file)
         print("Database Created")
     else:
         print("Database already exist")
 
 
-def load_stm_data():
-    stm_file_dir = os.listdir('stm')
+def load_stm_data(db_file, stmcli_data_dir):
+    stm_file_dir = os.listdir("{0}/stm".format(stmcli_data_dir))
     for filename in stm_file_dir:
-        load_data(filename)
+        load_data(filename, db_file, stmcli_data_dir)

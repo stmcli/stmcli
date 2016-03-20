@@ -4,13 +4,16 @@ import data
 import database
 import os
 import sqlite3
+import shutil
 import time
 import urllib
 from urllib import error, request
 import zipfile
 
 
-def download_gtfs_data():
+def download_gtfs_data(data_dir):
+    extract_location = "{0}/stm/".format(data_dir)
+
     try:
         output_dir = os.path.dirname(os.path.realpath(__file__)) + "/gtfs.zip"
         zip_url = "http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip"
@@ -21,9 +24,7 @@ def download_gtfs_data():
         print("Error {0} while trying to downloads stm infos")
         exit(1)
 
-    # Extracting to stm/ and deleting zip
-    extract_location = "stm/"
-
+    # Extracting
     if not os.path.isdir(extract_location):
         os.makedirs(extract_location)
 
@@ -33,14 +34,15 @@ def download_gtfs_data():
     os.unlink("gtfs.zip")
 
 
-def check_for_update(db_file):
+def check_for_update(db_file, data_dir):
     # Check if db_file exist
     if not os.path.isfile(db_file):
         answer = input("No data found, update? [y/n] ")
         if answer == "y":
-            data.download_gtfs_data()
-            database.create_db()
-            database.load_stm_data()
+            data.download_gtfs_data(data_dir)
+            database.create_db(db_file)
+            database.load_stm_data(db_file, data_dir)
+            shutil.rmtree("{0}/stm".format(data_dir))
         else:
             print("Can't continue without data.")
             exit(0)
@@ -58,9 +60,10 @@ def check_for_update(db_file):
         answer = input("Data update needed, update now? [y/n] ")
         if answer == "y":
             os.unlink(db_file)
-            data.download_gtfs_data()
-            database.create_db()
-            database.load_stm_data()
+            data.download_gtfs_data(data_dir)
+            database.create_db(db_file)
+            database.load_stm_data(db_file, data_dir)
+            shutil.rmtree("{0}/stm".format(data_dir))
         else:
             print("Data update needed for stmcli to work.")
             exit(0)

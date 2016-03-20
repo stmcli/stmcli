@@ -2,7 +2,6 @@
 
 import sqlite3
 import time
-from peewee import *
 
 
 def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):

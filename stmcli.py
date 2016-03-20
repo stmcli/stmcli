@@ -20,10 +20,8 @@ parser.add_argument("-t", "--time",
                     " Departure times. Format: HH:MM")
 args = parser.parse_args()
 
-db_file = "stm.db"
 
-
-def set_date():
+def set_date(db_file):
     if not args.date:
         return time.strftime('%Y%m%d')
     else:
@@ -62,14 +60,20 @@ def set_number_departure():
 
 def main():
 
+    stmcli_data_dir = "{0}/.stmcli/".format(os.path.expanduser('~'))
+    db_file = "{0}/stm.db".format(stmcli_data_dir)
+
+    if not os.path.isdir(stmcli_data_dir):
+        os.makedirs(stmcli_data_dir)
+
     # Checking for updates
-    data.check_for_update(db_file)
+    data.check_for_update(db_file, stmcli_data_dir)
 
     # Print the next departures
     if args.bus_number and args.bus_stop_code:
 
         # getting date and time
-        date = set_date()
+        date = set_date(db_file)
         time = set_time()
         number_departure = set_number_departure()
 
