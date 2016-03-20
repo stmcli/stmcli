@@ -15,10 +15,10 @@ def download_gtfs_data(data_dir):
     extract_location = "{0}/stm/".format(data_dir)
 
     try:
-        output_dir = os.path.dirname(os.path.realpath(__file__)) + "/gtfs.zip"
+        output_zip = "{0}/gtfs.zip".format(data_dir)
         zip_url = "http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip"
 
-        urllib.request.urlretrieve(zip_url, output_dir)
+        urllib.request.urlretrieve(zip_url, output_zip)
 
     except urllib.error.HTTPError as err:
         print("Error {0} while trying to downloads stm infos")
@@ -28,10 +28,10 @@ def download_gtfs_data(data_dir):
     if not os.path.isdir(extract_location):
         os.makedirs(extract_location)
 
-    zip = zipfile.ZipFile('gtfs.zip')
+    zip = zipfile.ZipFile(output_zip)
     zip.extractall(path=extract_location)
 
-    os.unlink("gtfs.zip")
+    os.unlink(output_zip)
 
 
 def check_for_update(db_file, data_dir):
