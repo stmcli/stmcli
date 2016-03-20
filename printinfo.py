@@ -99,17 +99,14 @@ def all_bus_for_stop_code(stop_code, db_file):
     # Getting all bus at this bus code
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
-    sql_var = (stop_code, time.strftime('%Y%m%d'))
+    sql_var = (stop_code,)
     c.execute("""SELECT DISTINCT route_id
                  FROM trips t
                  INNER JOIN stop_times st
                      ON t.trip_id=st.trip_id
                  INNER JOIN stops s
                      ON st.stop_id=s.stop_id
-                 AND s.stop_code=?
-                 AND service_id=(SELECT service_id
-                     FROM calendar_dates
-                     WHERE date=?)""", sql_var)
+                 AND s.stop_code=?""", sql_var)
 
     result = []
     for i in c.fetchall():

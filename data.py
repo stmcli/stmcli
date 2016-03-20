@@ -66,9 +66,9 @@ def check_for_update(db_file):
             exit(0)
 
 
-def date_in_scope(date):
+def date_in_scope(date, db_file):
 
-    conn = sqlite3.connect('stm.db')
+    conn = sqlite3.connect(db_file)
     c = conn.cursor()
     c.execute('SELECT * FROM calendar_dates WHERE date={0}'.format(date))
     t = c.fetchone()

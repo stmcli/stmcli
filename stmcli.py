@@ -2,7 +2,6 @@
 
 import argparse
 import data
-import database
 import os
 import printinfo
 import time
@@ -32,7 +31,7 @@ def set_date():
             print("date format is aaaammjj. Ex: 20160218")
             exit(1)
         else:
-            if not data.date_in_scope(args.date):
+            if not data.date_in_scope(args.date, db_file):
                 print("We don't have any info for this date.")
                 exit(1)
             else:
