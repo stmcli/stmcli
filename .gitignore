@@ -1,5 +1,3 @@
-# Ignore stm files
-*.txt
 # Ignore virtualenv
 env/
 # Ignore sqlite database
