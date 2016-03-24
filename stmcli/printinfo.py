@@ -36,7 +36,9 @@ def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
             departures_listed += 1
 
         if departures_listed is nb_departure:
-            return result
+            break
+
+    return result
 
 
 def all_bus_stop(bus_number, db_file):
