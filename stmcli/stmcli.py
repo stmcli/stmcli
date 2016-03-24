@@ -92,13 +92,13 @@ def main():
         bus_stops = printinfo.all_bus_stop(args.bus_number, db_file)
 
         for i in bus_stops:
-            print(i)
+            print(i.encode('ascii', 'replace'))
 
     elif args.bus_stop_code:
         # Print all bus for a stop code
         bus = printinfo.all_bus_for_stop_code(args.bus_stop_code, db_file)
 
         for i in bus:
-            print(i)
+            print(i.encode('ascii', 'replace'))
 
 main()
