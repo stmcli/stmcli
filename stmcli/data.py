@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import data
-import database
+from stmcli import database
 import os
 import sqlite3
 import shutil
@@ -39,7 +38,7 @@ def check_for_update(db_file, data_dir):
     if not os.path.isfile(db_file):
         answer = input("No data found, update? [y/n] ")
         if answer == "y":
-            data.download_gtfs_data(data_dir)
+            download_gtfs_data(data_dir)
             database.create_db(db_file)
             database.load_stm_data(db_file, data_dir)
             shutil.rmtree("{0}/stm".format(data_dir))
@@ -60,7 +59,7 @@ def check_for_update(db_file, data_dir):
         answer = input("Data update needed, update now? [y/n] ")
         if answer == "y":
             os.unlink(db_file)
-            data.download_gtfs_data(data_dir)
+            download_gtfs_data(data_dir)
             database.create_db(db_file)
             database.load_stm_data(db_file, data_dir)
             shutil.rmtree("{0}/stm".format(data_dir))
