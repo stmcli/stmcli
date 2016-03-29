@@ -12,7 +12,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='stmcli',
-    version='1.0.0',
+    version='1.0.1',
     description='The unofficial STM CLI client.',
     long_description=long_description,
     url='https://github.com/stmcli/stmcli',
