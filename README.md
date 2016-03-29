@@ -8,6 +8,8 @@ to create an easy to use command line application to access bus/metro informatio
 
 ``` pip3 install stmcli ```
 
+(stmcli is only compatible with python3+)
+
 ## Usage
 
 ```
