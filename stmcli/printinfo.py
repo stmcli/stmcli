@@ -31,7 +31,10 @@ def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
     departures_listed = 0
     for i in query_result:
         dep_time = i.split(':')
-        if dep_time[0] >= time[0] and dep_time[1] >= time[1]:
+        if dep_time[0] == time[0] and dep_time[1] >= time[1]:
+            result.append("{0}:{1}".format(dep_time[0], dep_time[1]))
+            departures_listed += 1
+        elif dep_time[0] > time[0]:
             result.append("{0}:{1}".format(dep_time[0], dep_time[1]))
             departures_listed += 1
 

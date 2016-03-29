@@ -6,7 +6,7 @@ to create an easy to use command line application to access bus/metro informatio
 
 ## Installation
 
-``` pip install stmcli ```
+``` pip3 install stmcli ```
 
 ## Usage
 
