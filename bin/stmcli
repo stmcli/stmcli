@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import stmcli
 import time
 from stmcli import printinfo, data
 
