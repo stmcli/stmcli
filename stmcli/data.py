@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import data
-import database
+from stmcli import data, database
 import os
 import sqlite3
 import shutil
