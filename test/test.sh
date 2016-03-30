@@ -11,6 +11,7 @@ stmcli -y
 if [[ $? -ne 0 ]]
 then
   echo "Update Failed"
+  exit(1)
 fi
 
 echo "---------printinfo.next_departures()---------"
@@ -18,6 +19,7 @@ stmcli -s 51253 -b 435
 if [[ $? -ne 0 ]]
 then
   echo "printinfo.next_departures() Failed"
+  exit(1)
 fi
 
 echo "---------main() (custom time test)---------"
@@ -25,6 +27,7 @@ stmcli -s 51253 -b 435 -t 10:30
 if [[ $? -ne 0 ]]
 then
   echo "main() (custom time test) Failed"
+  exit(1)
 fi
 
 echo "---------printinfo.all_bus_for_stop_code()---------"
@@ -32,6 +35,7 @@ stmcli -s 51253
 if [[ $? -ne 0 ]]
 then
   echo "printinfo.all_bus_for_stop_code() Failed"
+  exit(1)
 fi
 
 echo "---------printinfo.all_bus_stop()---------"
@@ -39,6 +43,7 @@ stmcli -b 435
 if [[ $? -ne 0 ]]
 then
   echo "printinfo.all_bus_stop() Failed"
+  exit(1)
 fi
 
 echo "Not tested yet : data.date_in_scope()"
