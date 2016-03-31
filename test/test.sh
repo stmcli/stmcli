@@ -46,10 +46,35 @@ then
   exit 1
 fi
 
-echo "---------metro_status()----------"
+echo "---------printinfo.metro_status()----------"
 stmcli -m green
+if [[ $? -ne 0 ]]
+then
+  echo "printinfo.metro_status() Failed"
+  exit 1
+fi
 stmcli -m orange
+if [[ $? -ne 0 ]]
+then
+  echo "printinfo.metro_status() Failed"
+  exit 1
+fi
 stmcli -m yellow
+if [[ $? -ne 0 ]]
+then
+  echo "printinfo.metro_status() Failed"
+  exit 1
+fi
 stmcli -m blue
+if [[ $? -ne 0 ]]
+then
+  echo "printinfo.metro_status() Failed"
+  exit 1
+fi
 stmcli -m all
+if [[ $? -ne 0 ]]
+then
+  echo "printinfo.metro_status() Failed"
+  exit 1
+fi
 echo "Not tested yet : data.date_in_scope()"
