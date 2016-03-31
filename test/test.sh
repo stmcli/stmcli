@@ -46,4 +46,10 @@ then
   exit 1
 fi
 
+echo "---------metro_status()----------"
+stmcli -m green
+stmcli -m orange
+stmcli -m yellow
+stmcli -m blue
+stmcli -m all
 echo "Not tested yet : data.date_in_scope()"

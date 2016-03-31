@@ -19,6 +19,10 @@ def main():
     parser.add_argument("-t", "--time",
                         help="specify the time to use when getting"
                         " Departure times. Format: HH:MM")
+    parser.add_argument("-m", "--metro",
+                        help="print the metro status for a given line"
+                        " require an internet connection. Accepted options: "
+                        "green, orange, yellow, blue and all")
     parser.add_argument("-y", "--force-update", action='store_true',
                         help="Do not ask before updating")
     args = parser.parse_args()
@@ -89,5 +93,19 @@ def main():
 
         for i in bus:
             print(i)
+
+    # Print metro status
+    if args.metro:
+        accepted_input = ["green", "orange", "yellow", "blue", "all"]
+
+        # Hardcoded until I implement option to switch to french
+        language = "Anglais"
+
+        if args.metro.lower() in accepted_input:
+            printinfo.metro_status(args.metro, language)
+        else:
+            print("Accepted inputs for the metro status are green, orange, "
+                  "yellow, blue and all.")
+            exit(1)
 
 main()
