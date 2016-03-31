@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/stmcli/stmcli.svg?branch=master)](https://travis-ci.org/stmcli/stmcli)
 # stmcli
 The unofficial STM CLI client.
 
