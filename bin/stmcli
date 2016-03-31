@@ -19,6 +19,8 @@ def main():
     parser.add_argument("-t", "--time",
                         help="specify the time to use when getting"
                         " Departure times. Format: HH:MM")
+    parser.add_argument("-y", "--force-update", action='store_true',
+                        help="Do not ask before updating")
     args = parser.parse_args()
 
     stmcli_data_dir = "{0}/.stmcli/".format(os.path.expanduser('~'))
@@ -28,7 +30,7 @@ def main():
         os.makedirs(stmcli_data_dir)
 
     # Checking for updates
-    data.check_for_update(db_file, stmcli_data_dir)
+    data.check_for_update(db_file, stmcli_data_dir, args.force_update)
 
     # number of departures to print
     if not args.number_departure:

@@ -33,10 +33,12 @@ def download_gtfs_data(data_dir):
     os.unlink(output_zip)
 
 
-def check_for_update(db_file, data_dir):
+def check_for_update(db_file, data_dir, force_update):
     # Check if db_file exist
     if not os.path.isfile(db_file):
-        answer = input("No data found, update? [y/n] ")
+        answer = "y"
+        if not force_update:
+            answer = input("No data found, update? [y/n] ")
         if answer == "y":
             download_gtfs_data(data_dir)
             database.create_db(db_file)
@@ -56,7 +58,9 @@ def check_for_update(db_file, data_dir):
     conn.close()
 
     if t is None or not os.path.isfile(db_file):
-        answer = input("Data update needed, update now? [y/n] ")
+        answer = "y"
+        if not force_update:
+            answer = input("Data update needed, update now? [y/n] ")
         if answer == "y":
             os.unlink(db_file)
             download_gtfs_data(data_dir)
