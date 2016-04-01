@@ -77,4 +77,11 @@ then
   echo "bus.metro_status() Failed"
   exit 1
 fi
+
+stmcli -m all -f
+if [[ $? -ne 0 ]]
+then
+  echo "bus.metro_status() Failed"
+  exit 1
+fi
 echo "Not tested yet : data.date_in_scope()"
