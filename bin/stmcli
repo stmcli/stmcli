@@ -3,7 +3,7 @@
 import argparse
 import os
 import time
-from stmcli import printinfo, data
+from stmcli import bus, metro, data
 
 
 def main():
@@ -70,28 +70,28 @@ def main():
 
     # Print the next departures
     if args.bus_number and args.bus_stop_code:
-        next_departures = printinfo.next_departures(args.bus_number,
-                                                    args.bus_stop_code,
-                                                    date,
-                                                    custom_time,
-                                                    number_departure,
-                                                    db_file)
+        next_departures = bus.next_departures(args.bus_number,
+                                              args.bus_stop_code,
+                                              date,
+                                              custom_time,
+                                              number_departure,
+                                              db_file)
 
         for i in next_departures:
             print(i)
 
     elif args.bus_number:
         # Print all bus stops for a bus
-        bus_stops = printinfo.all_bus_stop(args.bus_number, db_file)
+        bus_stops = bus.all_bus_stop(args.bus_number, db_file)
 
         for i in bus_stops:
             print(i.encode('ascii', 'replace').decode('utf-8'))
 
     elif args.bus_stop_code:
         # Print all bus for a stop code
-        bus = printinfo.all_bus_for_stop_code(args.bus_stop_code, db_file)
+        bust = bus.all_bus_for_stop_code(args.bus_stop_code, db_file)
 
-        for i in bus:
+        for i in bust:
             print(i)
 
     # Print metro status
@@ -102,7 +102,7 @@ def main():
         language = "Anglais"
 
         if args.metro.lower() in accepted_input:
-            printinfo.metro_status(args.metro, language)
+            metro.metro_status(args.metro, language)
         else:
             print("Accepted inputs for the metro status are green, orange, "
                   "yellow, blue and all.")

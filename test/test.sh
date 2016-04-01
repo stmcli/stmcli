@@ -14,11 +14,11 @@ then
   exit 1
 fi
 
-echo "---------printinfo.next_departures()---------"
+echo "---------bus.next_departures()---------"
 stmcli -s 51253 -b 435
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.next_departures() Failed"
+  echo "bus.next_departures() Failed"
   exit 1
 fi
 
@@ -30,51 +30,51 @@ then
   exit 1
 fi
 
-echo "---------printinfo.all_bus_for_stop_code()---------"
+echo "---------bus.all_bus_for_stop_code()---------"
 stmcli -s 51253
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.all_bus_for_stop_code() Failed"
+  echo "bus.all_bus_for_stop_code() Failed"
   exit 1
 fi
 
-echo "---------printinfo.all_bus_stop()---------"
+echo "---------bus.all_bus_stop()---------"
 stmcli -b 435
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.all_bus_stop() Failed"
+  echo "bus.all_bus_stop() Failed"
   exit 1
 fi
 
-echo "---------printinfo.metro_status()----------"
+echo "---------bus.metro_status()----------"
 stmcli -m green
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.metro_status() Failed"
+  echo "bus.metro_status() Failed"
   exit 1
 fi
 stmcli -m orange
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.metro_status() Failed"
+  echo "bus.metro_status() Failed"
   exit 1
 fi
 stmcli -m yellow
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.metro_status() Failed"
+  echo "bus.metro_status() Failed"
   exit 1
 fi
 stmcli -m blue
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.metro_status() Failed"
+  echo "bus.metro_status() Failed"
   exit 1
 fi
 stmcli -m all
 if [[ $? -ne 0 ]]
 then
-  echo "printinfo.metro_status() Failed"
+  echo "bus.metro_status() Failed"
   exit 1
 fi
 echo "Not tested yet : data.date_in_scope()"
