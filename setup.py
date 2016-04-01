@@ -12,7 +12,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='stmcli',
-    version='1.0.2',
+    version='1.0.3',
     description='The unofficial STM CLI client.',
     long_description=long_description,
     url='https://github.com/stmcli/stmcli',
@@ -31,5 +31,5 @@ setup(
     ],
     keywords='stm montreal autobus bus schedule horaire',
     packages=['stmcli'],
-    install_requires=['unicodecsv'],
+    install_requires=['unicodecsv', 'xmltodict'],
 )
