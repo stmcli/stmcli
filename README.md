@@ -14,15 +14,15 @@ to create an easy to use command line application to access bus/metro informatio
 ## Usage
 
 ```
-usage: stmcli.py [-h] [-b BUS_NUMBER] [-s BUS_STOP_CODE] [-n NUMBER_DEPARTURE]
-                 [-d DATE] [-t TIME]
+usage: stmcli [-h] [-b BUS_NUMBER] [-s BUS_STOP_CODE] [-n NUMBER_DEPARTURE]
+              [-d DATE] [-t TIME] [-m METRO] [-y]
 
 optional arguments:
   -h, --help            show this help message and exit
   -b BUS_NUMBER, --bus-number BUS_NUMBER
-                        the # of the bus
+                        # of the bus
   -s BUS_STOP_CODE, --bus-stop-code BUS_STOP_CODE
-                        the code of the bus stop
+                        Code of the bus stop
   -n NUMBER_DEPARTURE, --number-departure NUMBER_DEPARTURE
                         The number of departures to print. Only works with
                         both -b and -s specified
@@ -30,8 +30,13 @@ optional arguments:
                         Format: aaaammjj
   -t TIME, --time TIME  specify the time to use when getting Departure times.
                         Format: HH:MM
+  -m METRO, --metro METRO
+                        print the metro status for a given line require an
+                        internet connection. Accepted options: green, orange,
+                        yellow, blue and all
+  -y, --force-update    Do not ask before updating
 ```
-
+### Bus
 To get the next departures times you need to specify at least -b and -s which are the bus number and the bus stop code.
 
 For example: ``` stmcli -b 150 -s 52150 ```
@@ -45,3 +50,8 @@ By using the -d and/or the -t arguments you can get bus departures times from so
 For example: ``` stmcli -b 150 -s 52150 -d 20160328 -t 06:30 ```
 
 Would print almost the same thing as our first example The only exception is that it will print the 10 next departures after 6:30 AM on march 28th 2016.
+
+### Metro
+You can also get the current status of the metro with ```-m```.
+
+For example: ``` stmcli -m green ``` will give you the current status of the green line.
