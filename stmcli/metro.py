@@ -4,13 +4,37 @@ import urllib.request
 import xmltodict
 
 
+def line_to_english(line):
+    if line == "verte":
+        return "green"
+    elif line == "jaune":
+        return "yellow"
+    elif line == "bleu":
+        return "blue"
+    else:
+        return line
+
+
+def line_to_french(line):
+    if line == "green":
+        return "verte"
+    elif line == "yellow":
+        return "jaune"
+    elif line == "blue":
+        return "bleu"
+    else:
+        return line
+
+
 def print_status(line, status, language):
-    if language == "en":
+    if language == "Anglais":
         print("{0} line status: {1}"
-              .format(line, status.encode('ascii', 'replace').decode('utf-8')))
+              .format(line_to_english(line),
+                      status.encode('ascii', 'replace').decode('utf-8')))
     else:
         print("statut de la ligne {0}: {1}"
-              .format(line, status.encode('ascii', 'replace').decode('utf-8')))
+              .format(line_to_french(line),
+                      status.encode('ascii', 'replace').decode('utf-8')))
 
 
 def metro_status(line, language):
@@ -19,30 +43,19 @@ def metro_status(line, language):
     metro_website = urllib.request.urlopen(URL)
     metro_info = metro_website.read()
     metro_website.close()
-
+    print(language)
     xml_data = xmltodict.parse(metro_info)
 
     for i in xml_data['Root']['Ligne']:
         nline = i["NoLigne"]
-        if line == "green" and nline == "1" or line == "all" and nline == "1":
-            if language == "en":
-                print_status("green", i['msgAnglais'], language)
-            else:
-                print_status("verte", i['msgFrancais'], language)
+        if (line == "green" and nline == "1" or line == "all" and nline == "1" or line == "verte" and line == "1"):
+            print_status("green", i['msg' + language], language)
+
         if line == "orange" and nline == "2" or line == "all" and nline == "2":
-            if language == "en":
-                print_status("orange", i['msgAnglais'], language)
-            else:
-                print_status("orange", i['msgFrancais'], language)
+            print_status("orange", i['msg' + language], language)
 
-        if line == "yellow" and nline == "4" or line == "all" and nline == "4":
-            if language == "en":
-                print_status("yellow", i['msgAnglais'], language)
-            else:
-                print_status("jaune", i['msgFrancais'], language)
+        if line == "yellow" and nline == "4" or line == "all" and nline == "4" or line == "jaune" and line == "4":
+            print_status("yellow", i['msg' + language], language)
 
-        if line == "blue" and nline == "5" or line == "all" and nline == "5":
-            if language == "en":
-                print_status("blue", i['msgAnglais'], language)
-            else:
-                print_status("bleu", i['msgFrancais'], language)
+        if line == "blue" and nline == "5" or line == "all" and nline == "5" or line == "bleu" and line == "5":
+            print_status("blue", i['msg' + language], language)

@@ -78,7 +78,9 @@ then
   exit 1
 fi
 
-stmcli -m all -f
+echo "fr" > ~/.stmcli/lang.txt
+
+stmcli -m all
 if [[ $? -ne 0 ]]
 then
   echo "bus.metro_status() Failed"
