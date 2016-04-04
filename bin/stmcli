@@ -6,6 +6,20 @@ import time
 from stmcli import bus, metro, data
 
 
+def set_language(lang_file):
+    lang = open(lang_file, "r")
+    if "fr" in lang.read():
+        return "Francais"
+    else:
+        return "Anglais"
+
+
+def create_lang_file(lang_file):
+    lang = open(lang_file, "a")
+    lang.write("en")
+    lang.close()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-b", "--bus-number", help="# of the bus")
@@ -22,7 +36,7 @@ def main():
     parser.add_argument("-m", "--metro",
                         help="print the metro status for a given line"
                         " require an internet connection. Accepted options: "
-                        "green, orange, yellow, blue and all")
+                        "green, orange, yellow, blue, and all")
     parser.add_argument("-y", "--force-update", action='store_true',
                         help="Do not ask before updating")
     args = parser.parse_args()
@@ -33,8 +47,15 @@ def main():
     if not os.path.isdir(stmcli_data_dir):
         os.makedirs(stmcli_data_dir)
 
+    lang_file = "{0}/{1}".format(stmcli_data_dir, "lang.txt")
+    if not os.path.isfile(lang_file):
+        create_lang_file(lang_file)
+
     # Checking for updates
     data.check_for_update(db_file, stmcli_data_dir, args.force_update)
+
+    # Setting language
+    lang = set_language(lang_file)
 
     # number of departures to print
     if not args.number_departure:
@@ -96,16 +117,15 @@ def main():
 
     # Print metro status
     if args.metro:
-        accepted_input = ["green", "orange", "yellow", "blue", "all"]
-
-        # Hardcoded until I implement option to switch to french
-        language = "Anglais"
+        accepted_input = ["green", "orange", "yellow", "blue", "verte",
+                          "bleu", "jaune", "all"]
 
         if args.metro.lower() in accepted_input:
-            metro.metro_status(args.metro, language)
+            metro.metro_status(args.metro, lang)
         else:
-            print("Accepted inputs for the metro status are green, orange, "
-                  "yellow, blue and all.")
+            print("Accepted inputs for the metro status are:")
+            for i in accepted_input:
+                print(i)
             exit(1)
 
 main()
