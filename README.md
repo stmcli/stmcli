@@ -55,3 +55,12 @@ Would print almost the same thing as our first example The only exception is tha
 You can also get the current status of the metro with ```-m```.
 
 For example: ``` stmcli -m green ``` will give you the current status of the green line.
+
+## Language
+
+You can switch the output language of stmcli by editing your ```~/.stmcli/lang.txt```. (The file is generated the first time you run stmcli)
+The default is english.
+
+Switch to french with: ```echo "fr" > ~/.stmcli/lang.txt```
+
+Switch to english with: ```echo "en" > ~/.stmcli/lang.txt```
