@@ -43,7 +43,6 @@ def metro_status(line, language):
     metro_website = urllib.request.urlopen(URL)
     metro_info = metro_website.read()
     metro_website.close()
-    print(language)
     xml_data = xmltodict.parse(metro_info)
 
     for i in xml_data['Root']['Ligne']:
