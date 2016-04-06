@@ -106,7 +106,7 @@ def main():
         bus_stops = bus.all_bus_stop(args.bus_number, db_file)
 
         for i in bus_stops:
-            print(i.encode('ascii', 'replace').decode('utf-8'))
+            print(data.strip_accents(i))
 
     elif args.bus_stop_code:
         # Print all bus for a stop code

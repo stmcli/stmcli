@@ -2,6 +2,7 @@
 
 import urllib.request
 import xmltodict
+from stmcli import data
 
 
 def line_to_english(line):
@@ -28,13 +29,14 @@ def line_to_french(line):
 
 def print_status(line, status, language):
     if language == "Anglais":
-        print("{0} line status: {1}"
-              .format(line_to_english(line),
-                      status.encode('ascii', 'replace').decode('utf-8')))
+        status = ("{0} line status: {1}".format(line_to_english(line),
+                                                status))
+        print(data.strip_accents(status))
+
     else:
-        print("statut de la ligne {0}: {1}"
-              .format(line_to_french(line),
-                      status.encode('ascii', 'replace').decode('utf-8')))
+        status = ("statut de la ligne {0}: {1}".format(line_to_french(line),
+                                                       status))
+        print(data.strip_accents(status))
 
 
 def metro_status(line, language):

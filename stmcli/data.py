@@ -5,6 +5,7 @@ import os
 import sqlite3
 import shutil
 import time
+import unicodedata
 import urllib
 from urllib import error, request
 import zipfile
@@ -84,3 +85,8 @@ def date_in_scope(date, db_file):
         return False
     else:
         return True
+
+
+def strip_accents(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s)
+                   if unicodedata.category(c) != 'Mn')
