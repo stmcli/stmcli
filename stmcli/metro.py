@@ -49,14 +49,14 @@ def metro_status(line, language):
 
     for i in xml_data['Root']['Ligne']:
         nline = i["NoLigne"]
-        if (line == "green" and nline == "1" or line == "all" and nline == "1" or line == "verte" and line == "1"):
+        if (line == "green" and nline == "1" or line == "all" and nline == "1" or line == "verte" and nline == "1"):
             print_status("green", i['msg' + language], language)
 
         if line == "orange" and nline == "2" or line == "all" and nline == "2":
             print_status("orange", i['msg' + language], language)
 
-        if line == "yellow" and nline == "4" or line == "all" and nline == "4" or line == "jaune" and line == "4":
+        if line == "yellow" and nline == "4" or line == "all" and nline == "4" or line == "jaune" and nline == "4":
             print_status("yellow", i['msg' + language], language)
 
-        if line == "blue" and nline == "5" or line == "all" and nline == "5" or line == "bleu" and line == "5":
+        if line == "blue" and nline == "5" or line == "all" and nline == "5" or line == "bleu" and nline == "5":
             print_status("blue", i['msg' + language], language)
