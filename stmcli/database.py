@@ -71,31 +71,23 @@ def load_data(data_file, db_file, stmcli_data_dir):
         data = [row for row in reader]
 
     if "agency" in data_file:
-        print("agency")
         cursor.executemany('''INSERT INTO agency
                            VALUES (?, ?, ?, ?, ?, ?, ?);''', data)
     elif "stops" in data_file:
-        print("stops")
         cursor.executemany('''INSERT INTO stops
                            VALUES (?, ?, ?, ?, ?, ?, ?);''', data)
     elif "routes" in data_file:
-        print("routes")
         cursor.executemany('''INSERT INTO routes
                            VALUES (?, ?, ?, ?, ?, ?, ?, ?);''', data)
     elif "trips" in data_file:
-        print("trips")
         cursor.executemany('''INSERT INTO trips
                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);''', data)
     elif "stop_times" in data_file:
-        print("stop_times")
         cursor.executemany('''INSERT INTO stop_times
                            VALUES (?, ?, ?, ?, ?);''', data)
     elif "calendar_dates" in data_file:
-        print("calendar_dates")
         cursor.executemany('''INSERT INTO calendar_dates
                            VALUES (?, ?, ?);''', data)
-    else:
-        print("There is no table for " + data_file)
     conn.commit()
     conn.close()
 
