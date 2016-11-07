@@ -31,5 +31,5 @@ setup(
     ],
     keywords='stm montreal autobus bus schedule horaire',
     packages=['stmcli'],
-    install_requires=['unicodecsv', 'xmltodict'],
+    install_requires=['peewee', 'unicodecsv', 'xmltodict'],
 )

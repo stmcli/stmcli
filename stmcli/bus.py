@@ -1,36 +1,31 @@
 #!/usr/bin/env python3
 
-import sqlite3
 import time
+import urllib
+
+import peewee
+
+from stmcli.models import CalendarDate, Stop, StopTime, Trip
 
 
 def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
     # Getting the 10 next departures
-    conn = sqlite3.connect(db_file)
-    c = conn.cursor()
-    sql_var = (bus_number, stop_code, date)
-    c.execute("""SELECT st.departure_time
-                 FROM trips t
-                 INNER JOIN stop_times st
-                     ON t.trip_id=st.trip_id
-                 INNER JOIN stops s
-                     ON st.stop_id=s.stop_id
-                 WHERE t.route_id=?
-                 AND s.stop_code=?
-                 AND service_id=(SELECT service_id
-                     FROM calendar_dates
-                     WHERE date=?)
-                 ORDER BY st.departure_time""", sql_var)
 
-    query_result = []
-    for i in c.fetchall():
-        query_result.append(i[0])
-    conn.close()
+    subquery = CalendarDate.select(CalendarDate.service_id)\
+        .where(CalendarDate.date == date)
+    query_result = Trip.select(StopTime.departure_time)\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
+        .where(
+            (Trip.route_id == bus_number) &
+            (Stop.stop_code == stop_code) &
+            (Trip.service_id == subquery))\
+        .order_by(StopTime.departure_time)
 
     result = []
     departures_listed = 0
-    for i in query_result:
-        dep_time = i.split(':')
+    for i in query_result.dicts():
+        dep_time = i['departure_time'].split(':')
         if dep_time[0] == time[0] and dep_time[1] >= time[1]:
             result.append("{0}:{1}".format(dep_time[0], dep_time[1]))
             departures_listed += 1
@@ -46,78 +41,62 @@ def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
 
 def all_bus_stop(bus_number, db_file):
     # Getting all bus stop for this bus
-    conn = sqlite3.connect(db_file)
-    c = conn.cursor()
-    sql_var = (bus_number, time.strftime('%Y%m%d'))
+    result = []
 
-    c.execute("""SELECT stop_name, stop_code, trip_headsign
-                 FROM trips t
-                 INNER JOIN stop_times st
-                     ON t.trip_id=st.trip_id
-                 INNER JOIN stops s
-                     ON st.stop_id=s.stop_id
-                 WHERE t.route_id=?
-                 AND service_id=(SELECT service_id
-                     FROM calendar_dates
-                     WHERE date=?)
-                 AND direction_id = 0
-                 GROUP BY stop_code
-                 ORDER BY stop_sequence
-                 """, sql_var)
-    query_result = c.fetchall()
-    result = ["---------"]
-    result.append("Direction {0}".format(query_result[0][2]))
-    result.append("----------")
+    subquery = CalendarDate.select(CalendarDate.service_id)\
+        .where(CalendarDate.date == time.strftime('%Y%m%d'))
 
-    for i in query_result:
-        result.append("[{0}] {1}".format(i[0], i[1]))
+    query = Trip.select(Stop.stop_name, Stop.stop_code, Trip.trip_headsign)\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
+        .where(
+            (Trip.route_id == bus_number) &
+            (Trip.service_id == subquery) &
+            (Trip.direction_id == 0))\
+        .group_by(Stop.stop_code)\
+        .order_by(StopTime.stop_sequence)
 
-    c.execute("""SELECT stop_name, stop_code, trip_headsign
-                 FROM trips t
-                 INNER JOIN stop_times st
-                     ON t.trip_id=st.trip_id
-                 INNER JOIN stops s
-                     ON st.stop_id=s.stop_id
-                 WHERE t.route_id=?
-                 AND service_id=(SELECT service_id
-                     FROM calendar_dates
-                     WHERE date=?)
-                 AND direction_id = 1
-                 GROUP BY stop_code
-                 ORDER BY stop_sequence
-                 """, sql_var)
-    query_result = c.fetchall()
-    result.append("----------")
-    result.append("Direction {0}".format(query_result[0][2]))
-    result.append("----------")
+    query_result = query.dicts()
+    if len(query_result) > 0:
+        result = ["---------"]
+        result.append("Direction {0}".format(query_result[0]['trip_headsign']))
+        result.append("----------")
 
-    for i in query_result:
-        result.append("[{0}] {1}".format(i[0], i[1]))
+        for i in query_result:
+            result.append("[{0}] {1}".format(i['stop_name'], i['stop_code']))
 
-    conn.close()
+    query = Trip.select(Stop.stop_name, Stop.stop_code, Trip.trip_headsign)\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
+        .where(
+            (Trip.route_id == bus_number) &
+            (Trip.service_id == subquery) &
+            (Trip.direction_id == 1))\
+        .group_by(Stop.stop_code)\
+        .order_by(StopTime.stop_sequence)
+
+    query_result = query.dicts()
+    if len(query_result) > 0:
+        result = ["---------"]
+        result.append("Direction {0}".format(query_result[0]['trip_headsign']))
+        result.append("----------")
+
+        for i in query_result:
+            result.append("[{0}] {1}".format(i['stop_name'], i['stop_code']))
 
     return result
 
 
 def all_bus_for_stop_code(stop_code, db_file):
     # Getting all bus at this bus code
-    conn = sqlite3.connect(db_file)
-    c = conn.cursor()
-    sql_var = (stop_code,)
-    c.execute("""SELECT DISTINCT route_id
-                 FROM trips t
-                 INNER JOIN stop_times st
-                     ON t.trip_id=st.trip_id
-                 INNER JOIN stops s
-                     ON st.stop_id=s.stop_id
-                 AND s.stop_code=?""", sql_var)
 
-    result = []
-    for i in c.fetchall():
-        result.append(i[0])
-    conn.close()
+    query = Trip.select(peewee.fn.Distinct(Trip.route_id))\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
+        .where(Stop.stop_code == stop_code)
 
-    return result
+    for i in query.tuples():
+        yield i[0]
 
 
 def metro_status(line, language):

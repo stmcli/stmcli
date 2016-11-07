@@ -2,13 +2,16 @@
 
 from stmcli import database
 import os
-import sqlite3
 import shutil
 import time
 import unicodedata
 import urllib
 from urllib import error, request
 import zipfile
+
+import peewee
+
+from stmcli import database, models
 
 
 def download_gtfs_data(data_dir):
@@ -21,7 +24,7 @@ def download_gtfs_data(data_dir):
         urllib.request.urlretrieve(zip_url, output_zip)
 
     except urllib.error.HTTPError as err:
-        print("Error {0} while trying to downloads stm infos")
+        print("Error {0} while trying to downloads stm infos".format(err))
         exit(1)
 
     # Extracting
@@ -36,6 +39,7 @@ def download_gtfs_data(data_dir):
 
 def check_for_update(db_file, data_dir, force_update):
     # Check if db_file exist
+    database.init_database(db_file)
     if not os.path.isfile(db_file):
         answer = "y"
         if not force_update:
@@ -51,12 +55,7 @@ def check_for_update(db_file, data_dir, force_update):
 
     # Check if GTFS data update is needed
     curr_date = time.strftime('%Y%m%d')
-
-    conn = sqlite3.connect(db_file)
-    c = conn.cursor()
-    c.execute('SELECT * FROM calendar_dates WHERE date={0}'.format(curr_date))
-    t = c.fetchone()
-    conn.close()
+    t = models.CalendarDate.get(models.CalendarDate.date == curr_date)
 
     if t is None or not os.path.isfile(db_file):
         answer = "y"
@@ -74,12 +73,8 @@ def check_for_update(db_file, data_dir, force_update):
 
 
 def date_in_scope(date, db_file):
-
-    conn = sqlite3.connect(db_file)
-    c = conn.cursor()
-    c.execute('SELECT * FROM calendar_dates WHERE date={0}'.format(date))
-    t = c.fetchone()
-    conn.close()
+    models.db = peewee.SqliteDatabase(db_file)
+    t = models.CalendarDate.get(models.CalendarDate.date == date)
 
     if t is None:
         return False
