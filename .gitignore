@@ -1,4 +1,12 @@
 # Ignore virtualenv
 env/
+
+# Ignore setuptools generated files
+*.egg-info/
+
+# Ignore python cache files
+__pycache__
+*.pyc
+
 # Ignore sqlite database
 stm.db

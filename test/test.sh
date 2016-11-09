@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# to grant bash is going to be used to run the script
+# even if it's called like "sh test.sh"
+if [ ! "$BASH_VERSION" ] ; then
+    exec /bin/bash "$0" "$@"
+fi
 
 echo "data.check_for_update()"
 echo "data.download_gtfs_data()"
