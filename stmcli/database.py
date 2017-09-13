@@ -62,7 +62,7 @@ def load_data(data_file, db_file, stmcli_data_dir):
             values = '(?, ?, ?, ?, ?, ?, ?)'
         elif 'stops' in data_file:
             table = 'stops'
-            values = '(?, ?, ?, ?, ?, ?, ?)'
+            values = '(?, ?, ?, ?, ?, ?, ?, ?, ?)'
         elif 'routes' in data_file:
             table = 'routes'
             values = '(?, ?, ?, ?, ?, ?, ?, ?)'

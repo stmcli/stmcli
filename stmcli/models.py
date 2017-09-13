@@ -30,6 +30,8 @@ class Stop(peewee.Model):
     stop_lat = peewee.CharField(null=False)
     stop_lon = peewee.CharField(null=True)
     stop_url = peewee.CharField(max_length=60)
+    location_type = peewee.CharField(max_length=60)
+    parent_station = peewee.CharField()
     wheelchair_boarding = peewee.CharField(null=True)
 
     class Meta:
