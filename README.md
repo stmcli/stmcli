@@ -64,3 +64,10 @@ The default is english.
 Switch to french with: ```echo "fr" > ~/.stmcli/lang.txt```
 
 Switch to english with: ```echo "en" > ~/.stmcli/lang.txt```
+
+## Developper
+Some information to generate a new package for local deployment
+
+* pyhton3 setup.py bdist_wheel
+* pip3 install stmcli-1.1.1-py3-none-any.whl --user
+* Linux user: the stmcli command is available at $HOME/.local/bin/stmcli
