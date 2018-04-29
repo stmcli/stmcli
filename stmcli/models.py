@@ -55,7 +55,7 @@ class Route(peewee.Model):
 
 class Trip(peewee.Model):
     id = peewee.PrimaryKeyField()
-    route_id = peewee.ForeignKeyField(Route)
+    route_id_id = peewee.ForeignKeyField(Route)
     service_id = peewee.CharField(null=False)
     trip_id = peewee.CharField(max_length=20, null=False)
 
@@ -71,10 +71,10 @@ class Trip(peewee.Model):
 
 
 class StopTime(peewee.Model):
-    trip_id = peewee.ForeignKeyField(Trip, null=False)
+    trip_id_id = peewee.ForeignKeyField(Trip, null=False)
     arrival_time = peewee.CharField(max_length=8, null=False)
     departure_time = peewee.CharField(max_length=8, null=False)
-    stop_id = peewee.ForeignKeyField(Stop, null=False)
+    stop_id_id = peewee.ForeignKeyField(Stop, null=False)
     stop_sequence = peewee.CharField(null=False)
 
     class Meta:
