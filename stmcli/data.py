@@ -55,7 +55,11 @@ def check_for_update(db_file, data_dir, force_update):
 
     # Check if GTFS data update is needed
     curr_date = time.strftime('%Y%m%d')
-    t = models.CalendarDate.get(models.CalendarDate.date == curr_date)
+    try:
+        t = models.CalendarDate.get(models.CalendarDate.date == curr_date)
+    except Exception as e:
+        # Add robustness in case of unexpected exception from peewee when database does not have data 
+        t = None
 
     if t is None or not os.path.isfile(db_file):
         answer = "y"
