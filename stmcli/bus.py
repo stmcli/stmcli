@@ -9,17 +9,26 @@ from stmcli.models import CalendarDate, Stop, StopTime, Trip
 
 
 def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
-    # Getting the 10 next departures
+    """
+    Getting the 10 next departures
+    
+    How to check with tools database
+    sqlite3 stm.db
+    SELECT "t2"."departure_time" FROM "trips" AS t1 INNER JOIN "stop_times" AS t2 ON ("t1"."trip_id" = "t2"."trip_id_id") INNER JOIN "stops" AS t3 ON ("t2"."stop_id_id" = "t3"."stop_id") WHERE ((("t1"."route_id_id" = '51') AND ("t3"."stop_code" = '51176')) AND ("t1"."service_id" = (SELECT "t4"."service_id" FROM "calendar_dates" AS t4 WHERE ("t4"."date" = '20180626')))) ORDER BY "t2"."departure_time" ;
+    Replace 20180626 with the expected date
+    make it also for bus number '51' and '51176'
+    """
 
     subquery = CalendarDate.select(CalendarDate.service_id)\
         .where(CalendarDate.date == date)
+    # Use of .in as CalendarDate could return more than one value for a day since 06/2018
     query_result = Trip.select(StopTime.departure_time)\
-        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id_id))\
-        .join(Stop, on=(StopTime.stop_id_id == Stop.stop_id))\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
         .where(
-            (Trip.route_id_id == bus_number) &
+            (Trip.route_id == bus_number) &
             (Stop.stop_code == stop_code) &
-            (Trip.service_id == subquery))\
+            (Trip.service_id .in_( subquery)))\
         .order_by(StopTime.departure_time)
 
     result = []
@@ -46,17 +55,11 @@ def all_bus_stop(bus_number, db_file):
     subquery = CalendarDate.select(CalendarDate.service_id)\
         .where(CalendarDate.date == time.strftime('%Y%m%d'))
 
-    # query = Trip.select()
-    # # To iterate:
-    # for facility in query:
-        # print(facility.trip_id)
-   
-        
     query = Trip.select(Stop.stop_name, Stop.stop_code, Trip.trip_headsign)\
-        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id_id))\
-        .join(Stop, on=(StopTime.stop_id_id == Stop.stop_id))\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
         .where(
-            (Trip.route_id_id == bus_number) &
+            (Trip.route_id == bus_number) &
             (Trip.service_id == subquery) &
             (Trip.direction_id == 0))\
         .group_by(Stop.stop_code)\
@@ -72,10 +75,10 @@ def all_bus_stop(bus_number, db_file):
             result.append("[{0}] {1}".format(i['stop_name'], i['stop_code']))
 
     query = Trip.select(Stop.stop_name, Stop.stop_code, Trip.trip_headsign)\
-        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id_id))\
-        .join(Stop, on=(StopTime.stop_id_id == Stop.stop_id))\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
         .where(
-            (Trip.route_id_id == bus_number) &
+            (Trip.route_id == bus_number) &
             (Trip.service_id == subquery) &
             (Trip.direction_id == 1))\
         .group_by(Stop.stop_code)\
@@ -96,9 +99,9 @@ def all_bus_stop(bus_number, db_file):
 def all_bus_for_stop_code(stop_code, db_file):
     # Getting all bus at this bus code
 
-    query = Trip.select(peewee.fn.Distinct(Trip.route_id_id))\
-        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id_id))\
-        .join(Stop, on=(StopTime.stop_id_id == Stop.stop_id))\
+    query = Trip.select(peewee.fn.Distinct(Trip.route_id))\
+        .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
+        .join(Stop, on=(StopTime.stop_id == Stop.stop_id))\
         .where(Stop.stop_code == stop_code)
 
     for i in query.tuples():

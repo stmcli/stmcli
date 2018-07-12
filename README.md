@@ -9,7 +9,7 @@ to create an easy to use command line application to access bus/metro informatio
 
 ``` pip3 install stmcli ```
 
-(stmcli is only compatible with python3+)
+(stmcli is only compatible with python3+ and GNU/Linux)
 
 ## Usage
 
@@ -72,3 +72,9 @@ Some information to generate a new package for local deployment
 * pip3 install stmcli-1.*-py3-none-any.whl --user --upgrade
 * Linux user: the stmcli command is available at $HOME/.local/bin/stmcli
 * Verify installed is available: TBD
+
+### Investigate database
+
+By default, the database is createdin ~/.stmcli/stm.db as sqlite format.
+
+Useful tool will be sqlitebrowser https://github.com/sqlitebrowser/sqlitebrowser
