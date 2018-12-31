@@ -5,7 +5,8 @@ import urllib
 
 import peewee
 
-from stmcli.models import CalendarDate, Stop, StopTime, Trip
+from stmcli.models import Stop, StopTime, Trip, Calendar
+import datetime
 
 
 def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
@@ -14,13 +15,27 @@ def next_departures(bus_number, stop_code, date, time, nb_departure, db_file):
     
     How to check with tools database
     sqlite3 stm.db
-    SELECT "t2"."departure_time" FROM "trips" AS t1 INNER JOIN "stop_times" AS t2 ON ("t1"."trip_id" = "t2"."trip_id_id") INNER JOIN "stops" AS t3 ON ("t2"."stop_id_id" = "t3"."stop_id") WHERE ((("t1"."route_id_id" = '51') AND ("t3"."stop_code" = '51176')) AND ("t1"."service_id" = (SELECT "t4"."service_id" FROM "calendar_dates" AS t4 WHERE ("t4"."date" = '20180626')))) ORDER BY "t2"."departure_time" ;
+    
+    SELECT "t2"."departure_time" FROM "trips" AS t1 INNER JOIN "stop_times" AS t2 ON ("t1"."trip_id" = "t2"."trip_id_id") INNER JOIN "stops" AS t3 ON ("t2"."stop_id_id" = "t3"."stop_id") WHERE ((("t1"."route_id_id" = '51') AND ("t3"."stop_code" = '51176')) AND ("t1"."service_id" = (SELECT "t4"."service_id" FROM "calendar" AS t4 WHERE ('20180626' BETWEEN "t4"."start_date" AND "t4"."end_date" )))) ORDER BY "t2"."departure_time" ;
     Replace 20180626 with the expected date
     make it also for bus number '51' and '51176'
+
+    Other guideline to get valid working schedule for the weekday
+    select * from calendar WHERE (20181230 BETWEEN start_date AND end_date) AND sunday == 1
+
     """
 
-    subquery = CalendarDate.select(CalendarDate.service_id)\
-        .where(CalendarDate.date == date)
+    # Use table Calendar as update from december 2018
+    day_of_week = datetime.datetime.strptime(date, "%Y%m%d").strftime("%A").lower()
+    
+    # TODO: add Calendar_dates to remove service_id not enabled
+    subquery = Calendar.select(Calendar.service_id)\
+        .where(
+            (date >= Calendar.start_date) & 
+            (date <= Calendar.end_date) &
+            (getattr( Calendar, day_of_week) == 1)
+            )
+        
     # Use of .in as CalendarDate could return more than one value for a day since 06/2018
     query_result = Trip.select(StopTime.departure_time)\
         .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\
@@ -52,8 +67,16 @@ def all_bus_stop(bus_number, db_file):
     # Getting all bus stop for this bus
     result = []
 
-    subquery = CalendarDate.select(CalendarDate.service_id)\
-        .where(CalendarDate.date == time.strftime('%Y%m%d'))
+    date = time.strftime('%Y%m%d')
+    # Use table Calendar as update from december 2018
+    day_of_week = datetime.datetime.strptime(date, "%Y%m%d").strftime("%A").lower()
+    
+    subquery = Calendar.select(Calendar.service_id)\
+        .where(
+            (date >= Calendar.start_date) & 
+            (date <= Calendar.end_date) &
+            (getattr( Calendar, day_of_week) == 1)
+            )
 
     query = Trip.select(Stop.stop_name, Stop.stop_code, Trip.trip_headsign)\
         .join(StopTime, on=(Trip.trip_id == StopTime.trip_id))\

@@ -5,6 +5,8 @@ The unofficial STM CLI client.
 stmcli aims to use the data made available by the [Société de transport de Montréal](http://www.stm.info/)
 to create an easy to use command line application to access bus/metro informations.
 
+This tool does not use any information of STM real time. It only retrieve the scheduled times for bus. 
+
 ## Installation
 
 ``` pip3 install stmcli ```

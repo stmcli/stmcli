@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from stmcli import database
 import os
 import shutil
 import time
@@ -12,6 +11,7 @@ import zipfile
 import peewee
 
 from stmcli import database, models
+import datetime
 
 
 def download_gtfs_data(data_dir):
@@ -56,7 +56,15 @@ def check_for_update(db_file, data_dir, force_update):
     # Check if GTFS data update is needed
     curr_date = time.strftime('%Y%m%d')
     try:
-        t = models.CalendarDate.get(models.CalendarDate.date == curr_date)
+        # Use table Calendar as update from december 2018
+        day_of_week = datetime.datetime.strptime(curr_date, "%Y%m%d").strftime("%A").lower()
+        
+        t = models.Calendar.get(
+                (curr_date >= models.Calendar.start_date) & 
+                (curr_date <= models.Calendar.end_date) &
+                (getattr( models.Calendar, day_of_week) == 1)
+                )
+        
     except Exception as e:
         # Add robustness in case of unexpected exception from peewee when database does not have data 
         t = None
@@ -78,7 +86,15 @@ def check_for_update(db_file, data_dir, force_update):
 
 def date_in_scope(date, db_file):
     models.db = peewee.SqliteDatabase(db_file)
-    t = models.CalendarDate.get(models.CalendarDate.date == date)
+
+    # Use table Calendar as update from december 2018
+    day_of_week = datetime.datetime.strptime(date, "%Y%m%d").strftime("%A").lower()
+    
+    t = models.Calendar.get(
+            (date >= models.Calendar.start_date) & 
+            (date <= models.Calendar.end_date) &
+            (getattr( models.Calendar, day_of_week) == 1)
+            )
 
     if t is None:
         return False

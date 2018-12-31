@@ -72,10 +72,14 @@ def load_data(data_file, db_file, stmcli_data_dir):
         elif 'stop_times' in data_file:
             table = 'stop_times'
             values = '(null, ?, ?, ?, ?, ?)'
+        elif 'calendar.' in data_file:
+            table = 'calendar'
+            values = '(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         elif 'calendar_dates' in data_file:
             table = 'calendar_dates'
             values = '(null, ?, ?, ?)'
         else:
+            print("Ignored file {}".format(data_file))
             conn.close()
             return
 
