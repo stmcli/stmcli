@@ -89,3 +89,20 @@ class CalendarDate(peewee.Model):
 
     class Meta:
         db_table = 'calendar_dates'
+
+
+class Calendar(peewee.Model):
+    calendar_id = peewee.PrimaryKeyField()
+    service_id = peewee.CharField(null=False)
+    monday = peewee.CharField(null=False)
+    tuesday = peewee.CharField(null=False)
+    wednesday = peewee.CharField(null=False)
+    thursday = peewee.CharField(null=False)
+    friday = peewee.CharField(null=False)
+    saturday = peewee.CharField(null=False)
+    sunday = peewee.CharField(null=False)
+    start_date = peewee.DateField(null=False)
+    end_date = peewee.DateField(null=False)
+
+    class Meta:
+        db_table = 'calendar'

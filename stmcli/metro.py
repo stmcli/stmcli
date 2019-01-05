@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import urllib.request
 import xmltodict
 from stmcli import data
