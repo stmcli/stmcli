@@ -12,7 +12,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='stmcli',
-    version='1.2.0',
+    version='1.2.1',
     description='The unofficial STM CLI client.',
     long_description=long_description,
     url='https://github.com/stmcli/stmcli',
@@ -21,7 +21,6 @@ setup(
     license='MIT',
     scripts=['bin/stmcli'],
     classifiers=[
-        'Development Status :: Working',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
